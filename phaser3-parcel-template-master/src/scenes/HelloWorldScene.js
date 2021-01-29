@@ -12,7 +12,7 @@ export default class HelloWorldScene extends Phaser.Scene
         this.scoreText = undefined
         this.sky = undefined
         this.monumentActivated = false
-        this.spacebar = undefined
+        this.SkyState = 'sky'
         
 	}
 
@@ -107,7 +107,19 @@ export default class HelloWorldScene extends Phaser.Scene
             
             
               this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-              this.sky.setTexture('black') })
+           
+                  if (this.SkyState == "sky"){
+                        this.sky.setTexture('black')
+                        this.SkyState = 'black'
+                        
+
+                  }
+                  else{
+                       this.sky.setTexture('sky')
+                        this.SkyState = 'sky'
+                      
+                  }
+                })
               this.load.start()
             
             
