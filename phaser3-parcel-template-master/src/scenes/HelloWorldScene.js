@@ -11,6 +11,8 @@ export default class HelloWorldScene extends Phaser.Scene
         this.monument = undefined
         this.scoreText = undefined
         this.sky = undefined
+        this.monumentActivated = false
+        this.spacebar = undefined
         
 	}
 
@@ -32,19 +34,21 @@ export default class HelloWorldScene extends Phaser.Scene
         
     create()
     {
-        this.sky =  this.add.image(990, 540, 'sky').setScale(3)
+        this.sky =  this.add.image(900, 540, 'sky')
         const platforms =   this.createPlatforms()
         this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' })
-        this.player = this.createPlayer()
         this.monument = this.createMonument()
+        this.player = this.createPlayer()
         this.physics.add.collider(this.player, platforms)
         this.physics.add.collider(this.monument,platforms)
         this.physics.add.overlap(this.player,this.monument,this.mounmentActivate,null,this)
         this.cursors = this.input.keyboard.createCursorKeys()
+        this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+//        this.input.keyboard.on('keyup_ENTER', this.monumentWorldChange, this)
     }
     
     update(){
-        
+         
         
         if (this.cursors.left.isDown)
 		{
@@ -69,6 +73,8 @@ export default class HelloWorldScene extends Phaser.Scene
 		{
 			this.player.setVelocityY(-300)
 		}
+        
+        
     }
     
     
@@ -95,19 +101,37 @@ export default class HelloWorldScene extends Phaser.Scene
     }
     
     mounmentActivate(){
+
         
-        this.scoreText.setText('Monumnet aktywowany! ')
-        this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-		  this.sky.setTexture('black')
-	})
-        this.load.start()
-        console.log("changed!")
+        if (Phaser.Input.Keyboard.JustDown(this.spacebar)){
+            
+            
+              this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+              this.sky.setTexture('black') })
+              this.load.start()
+            
+            
+        }
     }
     
+        
+    monumentWorldChange(){
+        
+        console.log("Space!!!!")
+        if (this.monumentActivated)
+            {
+              this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+                            this.sky.setTexture('black') })
+              this.load.start()
+                
+            }
+        
+        
+    }
     
     createPlayer()
 	{
-        const player = this.physics.add.sprite(100, 300, 'dude')
+        const player = this.physics.add.sprite(100, 300, 'dude').setScale(2)
 		player.setBounce(0.2)
 		player.setCollideWorldBounds(true)
 
